@@ -1,0 +1,56 @@
+<div class="row">
+    <div class="form-group" *ngIf="errorMessage">
+        <p class="h4 text-danger">{{errorMessage}}</p>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <form novalidate autocomplete="off" #form="ngForm" (submit)="onSubmit()" >   
+    
+    <div class="form-group">
+        <label>Customer Name</label>
+        <input class="form-control form-control-lg" placeholder="Full Name" name="name"
+            #name="ngModel" [(ngModel)]="formData.name"
+            required [class.invalid]="name.invalid && name.touched">
+    </div>
+    <div class="form-group">
+        <label>Birth Date</label>
+        <input class="form-control form-control-lg" placeholder="Birth Date" name="birthDate"  max="{{maxDate}}"
+            #birthDate="ngModel" [(ngModel)]="formData.birthDate" type="date" (change)="SendDataonChange($event)"
+            required  [class.invalid]="birthDate.invalid && birthDate.touched">
+    </div>
+    <div class="form-group">
+        <label>Age</label>
+        <input class="form-control form-control-lg" placeholder="Age" disabled name="age"
+            #age="ngModel" [(ngModel)]="formData.age"
+            required maxlength="100" minlength="0" [class.invalid]="age.invalid && age.touched">
+    </div>
+    <div class="form-group">
+        <label>Occupation</label>
+        <select (change)="calculatePremium()" class="form-control form-control-lg"  name="occupationFactor"
+        #occupationFactor="ngModel" [(ngModel)]="formData.occupationFactor"
+        required     [class.invalid]="occupationFactor.invalid && occupationFactor.touched"  >
+         <option *ngFor="let occupationObj of list" value={{occupationObj.occupationRating.factor}}>
+              {{occupationObj.occupationName}}
+            </option>
+          </select>         
+    </div>     
+     <div class="form-group">
+        <label>Death – Sum Insured</label>
+        <input type="number" class="form-control form-control-lg" placeholder="Death – Sum Insured"  name="deathSumInsured"
+         #deathSumInsured="ngModel" [(ngModel)]="formData.deathSumInsured" (change)="calculatePremium()" 
+            required  ng-minlength="1" [class.invalid]="deathSumInsured.invalid && deathSumInsured.touched">
+    </div>    
+    <div class="form-group">
+        <button class="btn btn-info btn-lg btn-block" type="submit" [disabled]="form.invalid"> Calculate Premium</button>
+    </div>
+</form>
+    </div>
+    <div class="col-md-6">
+        <div >
+    <h1 class="display-6 text-center">Estimated Death Premium : {{deathPremium | currency:'CAD':'symbol-narrow':'1.2-2'}}</h1>
+</div>
+    </div>
+</div>
